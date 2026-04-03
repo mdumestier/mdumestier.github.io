@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>semiotics of a e-girl</title>
+
+<style>
+body::after{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background: repeating-linear-gradient(
+  to bottom,
+  transparent,
+  transparent 2px,
+  rgba(0,0,0,0.35) 3px
+);
+pointer-events:none;
+}
+</style>
+
+</head>
+
+<body style="margin:0; overflow:hidden; font-family:FT88; background:black; color:white;">
+
+<h1 id="mot" style="text-align:center; margin-top:40vh;">écrivez un mot</h1>
+
+<script>
+const contenus = {
+  a: [
+     { type: "video", valeur: "alex1.mp4" },
+     { type: "video", valeur: "alex2.mp4" },
+     { type: "video", valeur: "alex3.mp4" }
+  ],
+  b: { type: "mot", valeur: "bodycount" },
+  c: { type: "mot", valeur: "chienne" },
+  e: [
+     { type: "mot", valeur: "exigence" },
+     { type: "mot", valeur: "estime" }
+  ], 
+  d: { type: "image", valeur: "dickpic.png" },
+  f: [
+     { type: "mot", valeur: "faible" },
+     { type: "mot", valeur: "fraiche" },
+     { type: "mot", valeur: "fantasme" },
+     { type: "mot", valeur: "facile" }
+  ],
+  i: [
+     { type: "mot", valeur: "incel" },
+     { type: "mot", valeur: "innocente" }
+  ],
+  k: [
+     { type: "video", valeur: "killiansensei1.mp4" },
+     { type: "video", valeur: "killiansensei2.mp4" },
+     { type: "video", valeur: "killiansensei3.mp4" }
+  ],
+  l: [
+     { type: "video", valeur: "leraptor1.mp4" },
+     { type: "video", valeur: "lamenace1.mp4" }
+  ],
+  m: [
+     { type: "mot", valeur: "MGTOW" },
+     { type: "mot", valeur: "michto" }
+  ],
+  n: { type: "mot", valeur: "nefaste" },
+  p: [
+     { type: "mot", valeur: "poubelle à sperme" },
+     { type: "video", valeur: "papacito1.mp4" },
+     { type: "video", valeur: "papacito2.mp4" },
+     { type: "mot", valeur: "peremption" },
+     { type: "mot", valeur: "pute" },
+     { type: "mot", valeur: "profiteuse" }
+  ],
+  r: { type: "mot", valeur: "revenge porn" },
+  s: { type: "mot", valeur: "salope" },
+  t: { type: "mot", valeur: "tradition" },
+  v: [
+     { type: "mot", valeur: "valeur" },
+     { type: "mot", valeur: "vulgaire" },
+     { type: "video", valeur: "vinc1.mp4" }
+  ]
+};
+
+async function activerCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    
+    const video = document.createElement("video");
+    video.srcObject = stream;
+    video.autoplay = true;
+    video.playsInline = true;
+
+    video.style.position = "fixed";
+    video.style.top = "0";
+    video.style.left = "0";
+    video.style.width = "100vw";
+    video.style.height = "100vh";
+    video.style.objectFit = "cover";
+    video.style.zIndex = "-1"; // derrière tout
+    video.style.filter = "contrast(100%) saturate(150%)";
+
+    document.body.appendChild(video);
+
+
+  } catch (err) {
+    console.error("Erreur caméra :", err);
+  }
+}
+
+activerCamera();
+
+document.addEventListener("keydown", function(event) {
+  const lettre = event.key.toLowerCase();
+  const titre = document.getElementById("mot");
+  titre.textContent = "";
+
+  if (!contenus[lettre]) return;
+
+  let element = contenus[lettre];
+
+  // Si c'est un tableau (comme pour p), on choisit au hasard
+  if (Array.isArray(element)) {
+    element = element[Math.floor(Math.random() * element.length)];
+  }
+
+    // --- MOT ---
+    if (element.type === "mot") {
+      const mot = document.createElement("div");
+      mot.textContent = element.valeur;
+
+      mot.style.position = "absolute";
+      mot.style.fontSize = "40px";
+      mot.style.color = "#fa3f02";
+
+      mot.style.left = Math.random() * (window.innerWidth - 200) + "px";
+      mot.style.top = Math.random() * (window.innerHeight - 50) + "px";
+
+      document.body.appendChild(mot);
+
+      setTimeout(function() {
+        mot.remove();
+      }, 500);
+    }
+
+    // --- VIDEO ---
+    if (element.type === "video") {
+      const video = document.createElement("video");
+      video.src = element.valeur;
+      video.autoplay = true;
+      video.width = 300;
+
+      video.style.position = "absolute";
+      video.style.left = Math.random() * (window.innerWidth - 300) + "px";
+      video.style.top = Math.random() * (window.innerHeight - 200) + "px";
+
+      document.body.appendChild(video);
+
+      video.onended = function() {
+        video.remove();
+      };
+    }
+
+    // --- IMAGE ---
+    if (element.type === "image") {
+      const img = document.createElement("img");
+      img.src = element.valeur;
+      img.style.width = "200px";
+      img.style.position = "absolute";
+      img.style.left = Math.random() * (window.innerWidth - 200) + "px";
+      img.style.top = Math.random() * (window.innerHeight - 200) + "px";
+
+      document.body.appendChild(img);
+
+      // Supprimer l'image après 1 seconde
+      setTimeout(() => {
+        img.remove();
+      }, 1000);
+    }
+});
+
+</script>
+
+</body>
+</html>
