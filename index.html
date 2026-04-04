@@ -28,6 +28,20 @@ pointer-events:none;
 
 <h1 id="mot" style="text-align:center; margin-top:40vh;">écrivez un mot</h1>
 
+<!-- INPUT MOBILE -->
+<input id="inputMobile" 
+       type="text" 
+       autofocus 
+       style="
+         position: fixed;
+         bottom: 20px;
+         left: 50%;
+         transform: translateX(-50%);
+         opacity: 0.2;
+         font-size: 20px;
+         z-index: 10;
+       ">
+
 <script>
 const contenus = {
   a: [
@@ -84,6 +98,7 @@ const contenus = {
   ]
 };
 
+// --- CAMERA ---
 async function activerCamera() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -112,8 +127,7 @@ async function activerCamera() {
 
 activerCamera();
 
-document.addEventListener("keydown", function(event) {
-  const lettre = event.key.toLowerCase();
+function declencherContenu(lettre) {
   const titre = document.getElementById("mot");
   titre.textContent = "";
 
@@ -175,10 +189,29 @@ document.addEventListener("keydown", function(event) {
       document.body.appendChild(img);
 
       // Supprimer l'image après 1 seconde
-      setTimeout(() => {
-        img.remove();
-      }, 1000);
+      setTimeout(() => img.remove(), 1000);
     }
+}
+
+// --- ORDI ---
+document.addEventListener("keydown", function(event) {
+  declencherContenu(event.key.toLowerCase());
+});
+
+// --- MOBILE ---
+const input = document.getElementById("inputMobile");
+
+input.addEventListener("input", function() {
+  const valeur = input.value.toLowerCase();
+  const lettre = valeur.slice(-1);
+  input.value = "";
+
+  declencherContenu(lettre);
+});
+
+// garder le focus pour mobile
+document.body.addEventListener("click", () => {
+  input.focus();
 });
 
 </script>
