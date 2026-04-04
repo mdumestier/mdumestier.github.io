@@ -209,6 +209,10 @@ input.addEventListener("input", function() {
   declencherContenu(lettre);
 });
 
+document.body.addEventListener("click", () => {
+  input.focus();
+}, { once: true });
+
 // garder le focus pour mobile
 document.body.addEventListener("touchstart", () => {
   input.focus();
