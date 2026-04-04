@@ -210,9 +210,9 @@ input.addEventListener("input", function() {
 });
 
 // garder le focus pour mobile
-document.body.addEventListener("click", () => {
+document.body.addEventListener("touchstart", () => {
   input.focus();
-});
+}, { once: true });
 
 </script>
 
