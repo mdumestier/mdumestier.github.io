@@ -190,6 +190,9 @@ function declencherLettre(lettre) {
     video.src = element.valeur;
     video.autoplay = true;
     video.width = 300;
+    video.muted = false;
+    video.controls = false;
+    video.loop = false;
 
     video.style.position = "absolute";
     video.style.left = Math.random() * (window.innerWidth - 300) + "px";
