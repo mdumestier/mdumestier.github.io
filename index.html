@@ -20,6 +20,30 @@ background: repeating-linear-gradient(
 );
 pointer-events:none;
 }
+
+/* --- CLAVIER --- */
+#clavier {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+  z-index: 10;
+}
+
+#clavier button {
+  margin: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  background: #111;
+  color: #fa3f02;
+  border: 1px solid #fa3f02;
+  cursor: pointer;
+}
 </style>
 
 </head>
@@ -28,19 +52,25 @@ pointer-events:none;
 
 <h1 id="mot" style="text-align:center; margin-top:40vh;">écrivez un mot</h1>
 
-<!-- INPUT MOBILE -->
-<input id="inputMobile" 
-       type="text" 
-       autofocus 
-       style="
-         position: fixed;
-         bottom: 20px;
-         left: 50%;
-         transform: translateX(-50%);
-         opacity: 0.2;
-         font-size: 20px;
-         z-index: 10;
-       ">
+<!-- CLAVIER -->
+<div id="clavier">
+  <button data-key="a">A</button>
+  <button data-key="b">B</button>
+  <button data-key="c">C</button>
+  <button data-key="d">D</button>
+  <button data-key="e">E</button>
+  <button data-key="f">F</button>
+  <button data-key="i">I</button>
+  <button data-key="k">K</button>
+  <button data-key="l">L</button>
+  <button data-key="m">M</button>
+  <button data-key="n">N</button>
+  <button data-key="p">P</button>
+  <button data-key="r">R</button>
+  <button data-key="s">S</button>
+  <button data-key="t">T</button>
+  <button data-key="v">V</button>
+</div>
 
 <script>
 const contenus = {
@@ -98,7 +128,6 @@ const contenus = {
   ]
 };
 
-// --- CAMERA ---
 async function activerCamera() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -114,11 +143,10 @@ async function activerCamera() {
     video.style.width = "100vw";
     video.style.height = "100vh";
     video.style.objectFit = "cover";
-    video.style.zIndex = "-1"; // derrière tout
+    video.style.zIndex = "-1";
     video.style.filter = "contrast(100%) saturate(150%)";
 
     document.body.appendChild(video);
-
 
   } catch (err) {
     console.error("Erreur caméra :", err);
@@ -127,7 +155,7 @@ async function activerCamera() {
 
 activerCamera();
 
-function declencherContenu(lettre) {
+function declencherLettre(lettre) {
   const titre = document.getElementById("mot");
   titre.textContent = "";
 
@@ -135,92 +163,70 @@ function declencherContenu(lettre) {
 
   let element = contenus[lettre];
 
-  // Si c'est un tableau (comme pour p), on choisit au hasard
   if (Array.isArray(element)) {
     element = element[Math.floor(Math.random() * element.length)];
   }
 
-    // --- MOT ---
-    if (element.type === "mot") {
-      const mot = document.createElement("div");
-      mot.textContent = element.valeur;
+  // MOT
+  if (element.type === "mot") {
+    const mot = document.createElement("div");
+    mot.textContent = element.valeur;
 
-      mot.style.position = "absolute";
-      mot.style.fontSize = "40px";
-      mot.style.color = "#fa3f02";
+    mot.style.position = "absolute";
+    mot.style.fontSize = "40px";
+    mot.style.color = "#fa3f02";
 
-      mot.style.left = Math.random() * (window.innerWidth - 200) + "px";
-      mot.style.top = Math.random() * (window.innerHeight - 50) + "px";
+    mot.style.left = Math.random() * (window.innerWidth - 200) + "px";
+    mot.style.top = Math.random() * (window.innerHeight - 50) + "px";
 
-      document.body.appendChild(mot);
+    document.body.appendChild(mot);
 
-      setTimeout(function() {
-        mot.remove();
-      }, 500);
-    }
+    setTimeout(() => mot.remove(), 500);
+  }
 
-    // --- VIDEO ---
-    if (element.type === "video") {
-      const video = document.createElement("video");
-      video.src = element.valeur;
-      video.autoplay = true;
-      video.width = 300;
+  // VIDEO
+  if (element.type === "video") {
+    const video = document.createElement("video");
+    video.src = element.valeur;
+    video.autoplay = true;
+    video.width = 300;
 
-      video.style.position = "absolute";
-      video.style.left = Math.random() * (window.innerWidth - 300) + "px";
-      video.style.top = Math.random() * (window.innerHeight - 200) + "px";
+    video.style.position = "absolute";
+    video.style.left = Math.random() * (window.innerWidth - 300) + "px";
+    video.style.top = Math.random() * (window.innerHeight - 200) + "px";
 
-      document.body.appendChild(video);
+    document.body.appendChild(video);
 
-      video.onended = function() {
-        video.remove();
-      };
-    }
+    video.onended = () => video.remove();
+  }
 
-    // --- IMAGE ---
-    if (element.type === "image") {
-      const img = document.createElement("img");
-      img.src = element.valeur;
-      img.style.width = "200px";
-      img.style.position = "absolute";
-      img.style.left = Math.random() * (window.innerWidth - 200) + "px";
-      img.style.top = Math.random() * (window.innerHeight - 200) + "px";
+  // IMAGE
+  if (element.type === "image") {
+    const img = document.createElement("img");
+    img.src = element.valeur;
+    img.style.width = "200px";
+    img.style.position = "absolute";
+    img.style.left = Math.random() * (window.innerWidth - 200) + "px";
+    img.style.top = Math.random() * (window.innerHeight - 200) + "px";
 
-      document.body.appendChild(img);
+    document.body.appendChild(img);
 
-      // Supprimer l'image après 1 seconde
-      setTimeout(() => img.remove(), 1000);
-    }
+    setTimeout(() => img.remove(), 1000);
+  }
 }
 
-// --- ORDI ---
-document.addEventListener("keyup", function(event) {
-  declencherContenu(event.key.toLowerCase());
+// clavier physique
+document.addEventListener("keydown", function(event) {
+  if (event.repeat) return;
+  declencherLettre(event.key.toLowerCase());
 });
 
-// --- MOBILE ---
-const input = document.getElementById("inputMobile");
-
-input.addEventListener("input", function() {
-  const valeur = input.value.toLowerCase();
-  const lettre = valeur.slice(-1);
-  input.value = "";
-
-  declencherContenu(lettre);
+// clavier visuel
+document.querySelectorAll("#clavier button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    declencherLettre(btn.dataset.key);
+  });
 });
-
-document.body.addEventListener("click", () => {
-  input.focus();
-}, { once: true });
-
-// garder le focus pour mobile
-document.body.addEventListener("touchstart", () => {
-  input.focus();
-}, { once: true });
-
-video.muted = true;
-video.playsInline = true;
-
 </script>
 
 </body>
